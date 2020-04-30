@@ -1,0 +1,37 @@
+default_language_version:
+  python: python3.8
+repos:
+  - repo: https://github.com/ambv/black
+    rev: 19.3b0
+    hooks:
+      - id: black
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: end-of-file-fixer
+  - repo: local
+    hooks:
+      - id: autoflake
+        name: autoflake
+        entry: autoflake
+        language: system
+        args: ['--in-place', '--remove-all-unused-imports']
+  - repo: local
+    hooks:
+      - id: isort
+        name: isort
+        entry: python -m isort.__main__
+        language: system
+        types: [python]
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        args: [--rcfile=api/.pylintrc]
+        entry: pylint
+        language: system
+        types: [python]
+        files: \.py$
