@@ -7,18 +7,20 @@ on:
     branches:
       - master
 jobs:
-  deploy:
+  deploy-production:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: amondnet/now-deployment@v2
+      - name: now deploy
         id: now-deployment
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          zeit-token: ${{ secrets.ZEIT_TOKEN }}
-          now-org-id: ${{ secrets.NOW_ORG_ID }}
-          now-project-id: ${{ secrets.NOW_PROJECT_ID_STATIC }}
-          now-args: '--prod'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ZEIT_TOKEN: ${{ secrets.ZEIT_TOKEN }}
+          NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
+          NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
+        run: |
+          sudo npm i -g now --prod
+          now -t $ZEIT_TOKEN
       - name: preview-url
         run: |
           echo ${{ steps.now-deployment.outputs.preview-url }}
