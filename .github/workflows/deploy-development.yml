@@ -19,7 +19,7 @@ jobs:
           NOW_ORD_ID: ${{ secrets.NOW_ORG_ID }}
           NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
         run: |
-          npm i -g now
+          sudo npm i -g now
           now -t $ZEIT_TOKEN
       - name: preview-url
         run: |
