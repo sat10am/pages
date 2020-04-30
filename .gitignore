@@ -310,3 +310,5 @@ tags
 .history
 
 # End of https://www.gitignore.io/api/vim,node,react,macos,python,intellij+all,visualstudiocode
+
+.now
