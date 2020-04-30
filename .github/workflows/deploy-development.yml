@@ -16,7 +16,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ZEIT_TOKEN: ${{ secrets.ZEIT_TOKEN }}
-          NOW_ORD_ID: ${{ secrets.NOW_ORG_ID }}
+          NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
           NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
         run: |
           sudo npm i -g now
