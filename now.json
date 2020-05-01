@@ -9,15 +9,15 @@
       }
     },
     {
-        "src": "api/index.py",
-        "use": "@gbozee/now-python-asgi",
-        "config": { "maxLambdaSize": "15mb" }
+        "src": "api/pages/wsgi.py",
+        "use": "@ardnt/now-python-wsgi",
+        "config": { "maxLambdaSize": "30mb" }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/index"
+      "dest": "api/pages/wsgi.py"
     },
     {
       "src": "/(.*)",
