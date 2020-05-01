@@ -3,19 +3,15 @@ import os
 import sys
 from logging.config import fileConfig
 
-from dotenv import load_dotenv
 from alembic import context
 from sqlalchemy import pool, engine_from_config
 
 from api.constants import DATABASE_URL
-
 # add your model's MetaData object here
 # for 'autogenerate' support
 from api.sql.models import Base  # noqa
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
-
-load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
