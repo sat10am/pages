@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from alembic import context
 from sqlalchemy import pool, engine_from_config
 
+from api.constants import DATABASE_URL
 # add your model's MetaData object here
 # for 'autogenerate' support
 from api.sql.models import Base  # noqa
@@ -23,7 +24,6 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-
 target_metadata = Base.metadata
 
 
@@ -32,7 +32,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 def get_database_url():
-    return os.environ["DATABASE_URL"]
+    return DATABASE_URL
 
 
 def run_migrations_offline():
