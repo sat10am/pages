@@ -15,6 +15,10 @@ jobs:
         with:
           python-version: '3.8'
           architecture: 'x64'
+      - name: sqlite migrate
+        id: sqlite-migrate
+        run: |
+          pip install -r api/requirements.txt && alembic upgrade head
       - name: now deploy
         id: now-deployment
         env:
@@ -26,7 +30,3 @@ jobs:
           sudo npm i -g now
           now -t $ZEIT_TOKEN env pull
           now -t $ZEIT_TOKEN
-      - name: Sqlite Migrate
-        id: sqlite-migrate
-        run: |
-          pip install -r api/requirements.txt && alembic upgrade head
