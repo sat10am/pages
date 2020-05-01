@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 is_lambda_env = "AWS_LAMBDA_FUNCTION_NAME" in os.environ
-SQLITE_FILENAME = os.environ["DB_NAME"]
+SQLITE_FILENAME = "pages.sqlite3"
 
 DATABASE_URL = f"sqlite:///database/{SQLITE_FILENAME}"
 if is_lambda_env:
