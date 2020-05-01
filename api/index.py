@@ -22,12 +22,12 @@ def get_database():
 
 
 @app.post("/api/pages")
-def pages(db: Session = Depends(get_database)):
-    return crud.get_articles(db)
+async def pages(db: Session = Depends(get_database)):
+    return await crud.get_articles(db)
 
 
 @app.get("/api/page", response_model=schemas.Article)
-def page(db: Session = Depends(get_database)):
+async def page(db: Session = Depends(get_database)):
     return crud.get_article(db)
 
 
