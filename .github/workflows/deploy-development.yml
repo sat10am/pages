@@ -24,6 +24,7 @@ jobs:
         run: |
           sudo npm i -g now
           now -t $ZEIT_TOKEN env pull
+          cat .env
       - name: sqlite migrate
         id: sqlite-migrate
         working-directory: ./api
