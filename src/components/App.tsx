@@ -4,16 +4,14 @@ import AppBar from './AppBar';
 import ArticleList from './ArticleList'
 import axios from 'axios'
 import { AppProps, AppState } from '../types'
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import UrlFormDialog from './UrlFormDialog';
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props)
-
-
-    this.onClickAddArticle = this.onClickAddArticle.bind(this)
     
+    this.onClickSubmit = this.onClickSubmit.bind(this)
+
     document.onscroll = () => {
       const htmlEl = document.querySelector('html')
 
@@ -41,16 +39,16 @@ class App extends React.Component<AppProps, AppState> {
     this.updatePage()
   }
 
-  updatePage(reset: boolean = false) {
+  updatePage() {
     const {loading, page, setLoading, setPage, addArticles } = this.props
     if (loading) {
       return;
     }
 
     setLoading(true)
-    axios.get(`https://pages.sat10am.now.sh/api/articles?page=${page}`)
+    axios.get(`https://pages.sat10am.now.sh/api/articles?page=${page + 1}`)
       .then(({ data }) => {
-        addArticles(data, reset)
+        addArticles(data)
         setPage(page + 1)
       })
       .catch(() => {
@@ -59,53 +57,50 @@ class App extends React.Component<AppProps, AppState> {
       })
   }
 
-  setOpenArticleFormPopup(open: boolean) {
-    this.setState({
-      openArticleFormPopup: open
-    })
-  }
-
-  onClickAddArticle(name: string, url: string) {
+  onClickSubmit(authorName: string, url: string) {
     const { author, loading, setLoading } = this.props
 
     if (loading) {
-      return;
+      return
     }
-    
+
     setLoading(true);
 
-    (author.id ? Promise.resolve() : this.registerAuthor(name))
-      .then(() => this.addArticle(url))
-      .finally(() => {
-        setLoading(false)
-      })
+    ((author.name && author.name === authorName) ? Promise.resolve() : this.registerAuthor(authorName))
+      .then(() => this.submitUrl(url))
+      .finally(() => setLoading(false))
+
+    if (!author.name || author.name !== authorName) {
+      this.registerAuthor(authorName)
+    }
   }
 
   registerAuthor(name: string) {
     const { setAuthor } = this.props
+
     return axios.post(`https://pages.sat10am.now.sh/api/author`, {
       name
-    }).then(({ data }) => {
-      setAuthor(data)
-    }).catch(() => {
-
+    })
+    .then(({ data }) => {
+      return setAuthor(data)
+    })
+    .catch(() => {
     })
   }
 
-  addArticle(url: string) {
-    const { author } = this.props
-    axios.post(`https://pages.sat10am.now.sh/api/urls`, {
+  submitUrl(url: string) {
+    const { author, truncateArticles } = this.props
+    return axios.post(`https://pages.sat10am.now.sh/api/urls`, {
       author: author.id,
-      url,
+      url: url
+    }).then(() => {
+      truncateArticles()
+      this.updatePage()
     })
-      .then(() => {
-        this.updatePage(true)
-      }).catch(() => {
-      })
   }
 
   render() {
-    const { author, appBarShowing, loading, articles } = this.props
+    const { appBarShowing, loading, articles, author } = this.props
     
     return (
       <div className="App">
@@ -114,9 +109,11 @@ class App extends React.Component<AppProps, AppState> {
           showPaddingTop={appBarShowing}
           list={articles}
         ></ArticleList>
-        <Fab color="secondary" aria-label="add" className={`fabButton ${appBarShowing ? '' : 'hidden'}`}>
-          <AddIcon />
-        </Fab>
+        <UrlFormDialog 
+          appBarShowing={appBarShowing}
+          authorName={author.name}
+          onClickSubmit={this.onClickSubmit}
+        />
       </div>
     ); 
   }

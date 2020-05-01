@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux"
-import { setLoading, setPage, addArticles, setAuthor, showAppBar } from "../reducers/actions";
+import { setLoading, setPage, addArticles, setAuthor, showAppBar, truncateArticles } from "../reducers/actions";
 import App from "./App";
 import { PAGES_STATE, ArticleItem, Author } from '../types'
 
@@ -8,7 +8,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     setLoading: (loading: boolean) => dispatch(setLoading(loading)),
     setPage: (page: number) => dispatch(setPage(page)),
-    addArticles: (articles: Array<ArticleItem>, reset: boolean) => dispatch(addArticles(articles, reset)),
+    addArticles: (articles: Array<ArticleItem>) => dispatch(addArticles(articles)),
+    truncateArticles: () => dispatch(truncateArticles()),
     setAuthor: (author: Author) => dispatch(setAuthor(author)),
     showAppBar: (show: boolean) => dispatch(showAppBar(show))
   };

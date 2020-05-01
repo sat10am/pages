@@ -23,7 +23,8 @@ export interface PAGES_STATE {
 export interface PAGES_ACTIONS {
   setLoading: (loading: boolean) => PAGES_ACTION;
   setPage: (page: number) => PAGES_ACTION;
-  addArticles: (articles: Array<ArticleItem>, reset: boolean) => PAGES_ACTION;
+  addArticles: (articles: Array<ArticleItem>) => PAGES_ACTION;
+  truncateArticles: () => PAGES_ACTION; 
   setAuthor: (author: Author) => PAGES_ACTION;
   showAppBar: (show: boolean) => PAGES_ACTION;
 }
@@ -31,12 +32,9 @@ export interface PAGES_ACTIONS {
 export interface PAGES_ACTION {
   type: string;
   payload?: any;
-  meta?: any;
 }
 
 export type AppProps = PAGES_ACTIONS & PAGES_STATE
 
 export interface AppState {
-  hideToolbar: boolean,
-  openArticleFormPopup: boolean
 }

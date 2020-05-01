@@ -1,5 +1,5 @@
 import { PAGES_STATE, PAGES_ACTION } from '../types'
-import { SET_LOADING, SET_PAGE, ADD_ARTICLES, SET_AUTHOR, SHOW_APPBAR } from "./actions";
+import { SET_LOADING, SET_PAGE, ADD_ARTICLES, SET_AUTHOR, SHOW_APPBAR, TRUNCATE_ARTICLES } from "./actions";
 
 const initialState : PAGES_STATE = {
   author: {
@@ -7,7 +7,7 @@ const initialState : PAGES_STATE = {
     name: ''
   },
   loading: false,
-  page: 1,
+  page: 0,
   articles: [],
   appBarHeight: '64px',
   appBarShowing: true,
@@ -28,7 +28,13 @@ function rootReducer(state = initialState, action : PAGES_ACTION) {
     case ADD_ARTICLES: 
       return {
         ...state,
-        articles: action.meta.reset ? action.payload : state.articles.concat(action.payload)
+        articles: state.articles.concat(action.payload)
+      }
+    case TRUNCATE_ARTICLES: 
+      return {
+        ...state,
+        page: 0,
+        articles: []
       }
     case SET_AUTHOR:
       return {

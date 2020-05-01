@@ -3,6 +3,7 @@ import { ArticleItem, Author } from "../types";
 export const SET_LOADING = 'SET_LOADING';
 export const SET_PAGE = 'SET_PAGE';
 export const ADD_ARTICLES = 'ADD_ARTICLES';
+export const TRUNCATE_ARTICLES = 'TRUNCATE_ARTICLES';
 export const SET_AUTHOR = 'SET_AUTHOR';
 export const SHOW_APPBAR = 'SHOW_APPBAR';
 
@@ -20,11 +21,16 @@ export function setPage(page: number) {
   }
 }
 
-export function addArticles(articles: Array<ArticleItem>, reset: boolean) {
+export function addArticles(articles: Array<ArticleItem>) {
   return {
     type: ADD_ARTICLES,
-    payload: articles,
-    meta: {reset}
+    payload: articles
+  }
+}
+
+export function truncateArticles() {
+  return {
+    type: TRUNCATE_ARTICLES
   }
 }
 
