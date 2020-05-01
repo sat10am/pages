@@ -4,7 +4,8 @@ import AppBar from './AppBar';
 import ArticleList from './ArticleList'
 import axios from 'axios'
 import { AppProps, AppState } from '../types'
-import ArticleForm from './ArticleForm'
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -113,11 +114,9 @@ class App extends React.Component<AppProps, AppState> {
           showPaddingTop={appBarShowing}
           list={articles}
         ></ArticleList>
-        <ArticleForm
-          authorName={author.name}
-          openModal={false}
-          onClickAdd={this.onClickAddArticle}
-        />
+        <Fab color="secondary" aria-label="add" className={`fabButton ${appBarShowing ? '' : 'hidden'}`}>
+          <AddIcon />
+        </Fab>
       </div>
     ); 
   }
