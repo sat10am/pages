@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
       - name: now deploy
         id: now-deployment
         env:
@@ -23,9 +27,6 @@ jobs:
           now -t $ZEIT_TOKEN env pull
           now -t $ZEIT_TOKEN
       - name: Sqlite Migrate
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-          architecture: 'x64'
+        id: sqlite-migrate
         run: |
           pip install -r api/requirements.txt && alembic upgrade head
