@@ -12,6 +12,7 @@ from sqlalchemy import pool, engine_from_config
 from api.sql.models import Base  # noqa
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
 load_dotenv()
 
 # this is the Alembic Config object, which provides

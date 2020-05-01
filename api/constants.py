@@ -1,5 +1,8 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
 is_lambda_env = "AWS_LAMBDA_FUNCTION_NAME" in os.environ
 SQLITE_FILENAME = os.environ["DB_NAME"]
 
