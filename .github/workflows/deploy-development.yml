@@ -9,12 +9,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      ZEIT_TOKEN: ${{ secrets.ZEIT_TOKEN }}
+      NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
+      NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: '3.8'
           architecture: 'x64'
+      - name: now create env
+        id: now-env
+        run: |
+          sudo npm i -g now
+          now -t $ZEIT_TOKEN env pull
       - name: sqlite migrate
         id: sqlite-migrate
         working-directory: ./api
@@ -26,10 +35,5 @@ jobs:
         id: now-deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ZEIT_TOKEN: ${{ secrets.ZEIT_TOKEN }}
-          NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
-          NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
         run: |
-          sudo npm i -g now
-          now -t $ZEIT_TOKEN env pull
           now -t $ZEIT_TOKEN
