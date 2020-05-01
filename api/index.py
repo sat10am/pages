@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
@@ -24,23 +22,22 @@ def get_database():
 
 
 @app.post("/api/pages")
-async def pages(url: Optional[str]):
-    print(url)
-    return {"message": "Hello World"}
+def pages(db: Session = Depends(get_database)):
+    return crud.get_articles(db)
 
 
 @app.get("/api/page", response_model=schemas.Article)
-async def page(db: Session = Depends(get_database)):
+def page(db: Session = Depends(get_database)):
     return crud.get_article(db)
 
 
 @app.get("/api/openapi.json")
-async def get_open_api_endpoint():
+def get_open_api_endpoint():
     return JSONResponse(
         get_openapi(title="FastAPI", routes=app.routes, version="2")
     )
 
 
 @app.get("/api/docs")
-async def get_documentation():
+def get_documentation():
     return get_swagger_ui_html(openapi_url="/api/openapi.json", title="docs")
