@@ -2,34 +2,32 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import sat10amlogo from '../sat10amlogo.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
+  thumbnail: {
+    width: 151,
+    height: 151,
+    display: 'inline-block',
+    marginRight: 10
+  },
   details: {
-    display: 'flex',
-    flexDirection: 'column',
+    textDecoration: 'none',
+    color: 'inherit',
+    display: 'block',
+    width: '100%',
   },
   content: {
-    flex: '2 0 auto',
-    alignItems: 'left'
-  },
-  cover: {
-    width: 151,
-  },
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  playIcon: {
-    height: 38,
-    width: 38,
-  },
+    display: 'inline-block',
+    verticalAlign: 'top',
+    width: 'calc(100% - 161px)',
+    height: 151,
+    maxHeight: 151
+  }
 }));
 
 export default function ArticleItem({ item }) {
@@ -37,19 +35,18 @@ export default function ArticleItem({ item }) {
 
   return (
     <Card className={classes.root}>
-      <a href={item.url} 
+      <a 
+        href={item.url.address} 
         className={classes.details}
-        target="_blank"
       >
-        <div>
-          <CardMedia
-            className={classes.cover}
-            image={item.thumbnail}
+        <CardContent>
+          <img
+            className={classes.thumbnail}
+            src={item.thumbnail || sat10amlogo}
             title={item.title}
+            alt={item.title}
           />
-        </div>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
+          <div className={classes.content}>
             <Typography component="h5" variant="h5">
               {item.title}
             </Typography>
@@ -59,8 +56,8 @@ export default function ArticleItem({ item }) {
             <Typography variant="subtitle1" color="textSecondary">
               {new Date(item.created_at).toDateString()}
             </Typography>
-          </CardContent>
-        </div>
+          </div>
+        </CardContent>
       </a>
     </Card>
   );
