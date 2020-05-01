@@ -1,24 +1,17 @@
 import React from 'react';
 import './App.css';
-import PagesAppBar from './PagesAppBar';
+import AppBar from './AppBar';
 import ArticleList from './ArticleList'
-import Container from '@material-ui/core/Container';
 import axios from 'axios'
-import { AppProps, AppState, ArticleItem } from '../types'
+import { AppProps, AppState } from '../types'
 import ArticleForm from './ArticleForm'
-import { setLoading } from '../reducers/actions';
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props)
 
-    this.state = {
-      hideToolbar: false,
-      openArticleFormPopup: false,
-    }
 
-    this.addArticle = this.addArticle.bind(this)
-    this.calculateContainerPaddingTop = this.calculateContainerPaddingTop.bind(this)
+    this.onClickAddArticle = this.onClickAddArticle.bind(this)
     
     document.onscroll = () => {
       const htmlEl = document.querySelector('html')
@@ -34,11 +27,11 @@ class App extends React.Component<AppProps, AppState> {
         this.updatePage()
       }
 
-      const {hideToolbar} = this.state
-      if (!hideToolbar && htmlEl.scrollTop > 64) {
-        this.setState({ hideToolbar : true })
-      } else if (hideToolbar && htmlEl.scrollTop <= 64) {
-        this.setState({hideToolbar: false})
+      const {appBarShowing, showAppBar} = this.props
+      if (appBarShowing && htmlEl.scrollTop > 64) {
+        showAppBar(false)
+      } else if (!appBarShowing && htmlEl.scrollTop <= 64) {
+        showAppBar(true)
       }
     }
   }
@@ -78,7 +71,8 @@ class App extends React.Component<AppProps, AppState> {
       return;
     }
     
-    setLoading(true)
+    setLoading(true);
+
     (author.id ? Promise.resolve() : this.registerAuthor(name))
       .then(() => this.addArticle(url))
       .finally(() => {
@@ -109,34 +103,19 @@ class App extends React.Component<AppProps, AppState> {
       })
   }
 
-  calculateContainerPaddingTop() {
-    // const node = ReactDom.findDOMNode(this.appBarRef) as Element
-    const appBar = document.querySelector('#AppBar')
-    if (appBar) {
-      return appBar.getBoundingClientRect().height;
-    }
-
-    return 0
-  }
-  
   render() {
-    const { author, loading, articles} = this.props
-    const { hideToolbar, openArticleFormPopup } = this.state
-
+    const { author, appBarShowing, loading, articles } = this.props
+    
     return (
       <div className="App">
-        <PagesAppBar 
-          loading={loading} 
-          hideToolbar={hideToolbar} 
-          onClickAdd={this.setOpenArticleFormPopup}></PagesAppBar>
-        <Container style={{ paddingTop: this.calculateContainerPaddingTop() }}>
-          <ArticleList 
-            list={articles} 
-          ></ArticleList>
-        </Container>
+        <AppBar showing={appBarShowing} loading={loading} />
+        <ArticleList 
+          showPaddingTop={appBarShowing}
+          list={articles}
+        ></ArticleList>
         <ArticleForm
           authorName={author.name}
-          openModal={openArticleFormPopup}
+          openModal={false}
           onClickAdd={this.onClickAddArticle}
         />
       </div>

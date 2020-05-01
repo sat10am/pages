@@ -2,7 +2,6 @@ export interface ArticleItem {
   id: number;
   title: string;
   description: string;
-  content: string;
   url: string
   created_at: string
 }
@@ -16,7 +15,9 @@ export interface PAGES_STATE {
   author: Author;
   loading: false;
   page: number;
-  articles: Array<ArticleItem>
+  articles: Array<ArticleItem>,
+  appBarHeight: string,
+  appBarShowing: boolean,
 }
 
 export interface PAGES_ACTIONS {
@@ -24,11 +25,13 @@ export interface PAGES_ACTIONS {
   setPage: (page: number) => PAGES_ACTION;
   addArticles: (articles: Array<ArticleItem>, reset: boolean) => PAGES_ACTION;
   setAuthor: (author: Author) => PAGES_ACTION;
+  showAppBar: (show: boolean) => PAGES_ACTION;
 }
 
 export interface PAGES_ACTION {
   type: string;
-  payload: any;
+  payload?: any;
+  meta?: any;
 }
 
 export type AppProps = PAGES_ACTIONS & PAGES_STATE

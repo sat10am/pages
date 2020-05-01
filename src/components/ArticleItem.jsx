@@ -57,7 +57,7 @@ export default function ArticleItem({ item }) {
               {item.description}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              {new Date(item.created_at)}
+              {new Date(item.created_at).toDateString()}
             </Typography>
           </CardContent>
         </div>
