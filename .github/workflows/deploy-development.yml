@@ -17,8 +17,11 @@ jobs:
           architecture: 'x64'
       - name: sqlite migrate
         id: sqlite-migrate
+        working-directory: ./api
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          echo $PWD
+          echo "$PWD"
           cd api && pip install -r requirements.txt && alembic upgrade head
       - name: now deploy
         id: now-deployment
