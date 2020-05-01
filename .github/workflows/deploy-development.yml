@@ -26,5 +26,4 @@ jobs:
         id: sqlite-migrate
         run: |
           cd api
-          pip install -r requirements.txt
-          alembic upgrade head
+          pip install -r requirements.txt && alembic upgrade head

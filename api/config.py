@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     database_url: str = DATABASE_URL
 
 
-@lru_cache
+@lru_cache()
 def get_settings():
     return Settings()
 
