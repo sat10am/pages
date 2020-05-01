@@ -7,25 +7,33 @@ on:
     branches:
       - master
 jobs:
-  deploy-production:
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      ZEIT_TOKEN: ${{ secrets.ZEIT_TOKEN }}
+      NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
+      NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v2
-      - uses: butlerlogic/action-autotag@stable
+      - uses: actions/setup-python@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: now deploy
-        id: now-deployment
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ZEIT_TOKEN: ${{ secrets.ZEIT_TOKEN }}
-          NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
-          NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
+          python-version: '3.8'
+          architecture: 'x64'
+      - name: now create env
+        id: now-env
         run: |
           sudo npm i -g now
           now -t $ZEIT_TOKEN env pull
-          now -t $ZEIT_TOKEN --prod
       - name: sqlite migrate
         id: sqlite-migrate
+        working-directory: ./api
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          pip install -r api/requirements.txt && alembic upgrade head
+          pip install -r requirements.txt && alembic upgrade head
+      - name: now deploy production
+        id: now-deployment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          now -t $ZEIT_TOKEN --prod
