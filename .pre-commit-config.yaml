@@ -30,7 +30,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        args: [--rcfile=api/.pylintrc]
+        args: [--rcfile=.pylintrc]
         entry: pylint
         language: system
         types: [python]

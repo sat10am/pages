@@ -23,4 +23,11 @@ jobs:
           NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
         run: |
           sudo npm i -g now
+          now env pull
           now -t $ZEIT_TOKEN --prod
+      - name: sqlite migrate
+        id: sqlite-migrate
+        run: |
+          cd api
+          pip install -r requirements.txt
+          alembic upgrade head
