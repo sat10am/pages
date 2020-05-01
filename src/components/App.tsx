@@ -2,18 +2,24 @@ import React from 'react';
 import './App.css';
 import PagesAppBar from './PagesAppBar';
 import ArticleList from './ArticleList'
+import Container from '@material-ui/core/Container';
 import axios from 'axios'
-import { AppProps, AppState } from '../types'
+import { AppProps, AppState, ArticleItem } from '../types'
+import ArticleForm from './ArticleForm'
+import { setLoading } from '../reducers/actions';
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props)
 
     this.state = {
-      hideAppBar: false 
+      hideToolbar: false,
+      openArticleFormPopup: false,
     }
 
     this.addArticle = this.addArticle.bind(this)
+    this.calculateContainerPaddingTop = this.calculateContainerPaddingTop.bind(this)
+    
     document.onscroll = () => {
       const htmlEl = document.querySelector('html')
 
@@ -28,11 +34,11 @@ class App extends React.Component<AppProps, AppState> {
         this.updatePage()
       }
 
-      const {hideAppBar} = this.state
-      if (!hideAppBar && htmlEl.scrollTop > 64) {
-        this.setState({ hideAppBar : true })
-      } else if (hideAppBar && htmlEl.scrollTop <= 64) {
-        this.setState({hideAppBar: false})
+      const {hideToolbar} = this.state
+      if (!hideToolbar && htmlEl.scrollTop > 64) {
+        this.setState({ hideToolbar : true })
+      } else if (hideToolbar && htmlEl.scrollTop <= 64) {
+        this.setState({hideToolbar: false})
       }
     }
   }
@@ -48,136 +54,91 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     setLoading(true)
-    axios.get(`http://localhost:49765/api?page=${(page - 1)}`)
+    axios.get(`https://pages.sat10am.now.sh/api/articles?page=${page}`)
       .then(({ data }) => {
         addArticles(data, reset)
         setPage(page + 1)
       })
       .catch(() => {
-        addArticles([{
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjffdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }, {
-          url: 'www.naver.com',
-          thumbnail: '../logo.svg',
-          title: 'title',
-          content: 'fdksjafkldsjflkdsjflksdjf'
-        }], reset)
-
-        setPage(page + 1)
       }).finally(() => {
         setLoading(false)
       })
   }
 
-  refreshArticles() {
+  setOpenArticleFormPopup(open: boolean) {
+    this.setState({
+      openArticleFormPopup: open
+    })
+  }
+
+  onClickAddArticle(name: string, url: string) {
+    const { author, loading, setLoading } = this.props
+
+    if (loading) {
+      return;
+    }
     
+    setLoading(true)
+    (author.id ? Promise.resolve() : this.registerAuthor(name))
+      .then(() => this.addArticle(url))
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  registerAuthor(name: string) {
+    const { setAuthor } = this.props
+    return axios.post(`https://pages.sat10am.now.sh/api/author`, {
+      name
+    }).then(({ data }) => {
+      setAuthor(data)
+    }).catch(() => {
+
+    })
   }
 
   addArticle(url: string) {
-    const { loading, setLoading } = this.props
-    if (loading) {
-      return;
-    }  
-
-    setLoading(true)
-    axios.post(`localhost:3333`, {
+    const { author } = this.props
+    axios.post(`https://pages.sat10am.now.sh/api/urls`, {
+      author: author.id,
       url,
     })
       .then(() => {
         this.updatePage(true)
-      }).catch(e => {
-      }).finally(() => {
-        setLoading(false)
+      }).catch(() => {
       })
+  }
+
+  calculateContainerPaddingTop() {
+    // const node = ReactDom.findDOMNode(this.appBarRef) as Element
+    const appBar = document.querySelector('#AppBar')
+    if (appBar) {
+      return appBar.getBoundingClientRect().height;
+    }
+
+    return 0
   }
   
   render() {
-    const { loading, articles} = this.props
+    const { author, loading, articles} = this.props
+    const { hideToolbar, openArticleFormPopup } = this.state
 
     return (
       <div className="App">
-        <PagesAppBar loading={loading} hideAppBar={this.state.hideAppBar} onClickAdd={this.addArticle}></PagesAppBar>
-        <ArticleList 
-          list={articles} 
-        ></ArticleList>
+        <PagesAppBar 
+          loading={loading} 
+          hideToolbar={hideToolbar} 
+          onClickAdd={this.setOpenArticleFormPopup}></PagesAppBar>
+        <Container style={{ paddingTop: this.calculateContainerPaddingTop() }}>
+          <ArticleList 
+            list={articles} 
+          ></ArticleList>
+        </Container>
+        <ArticleForm
+          authorName={author.name}
+          openModal={openArticleFormPopup}
+          onClickAdd={this.onClickAddArticle}
+        />
       </div>
     ); 
   }

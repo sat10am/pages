@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ArticleList({list}) {
+export default function ArticleList({list }) {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
-      {list.map((item, idx) => <ArticleItem key={idx} item={item} />)}
+      {list.map((item, idx) => <ArticleItem key={item.id} item={item} />)}
     </List>
   );
 }

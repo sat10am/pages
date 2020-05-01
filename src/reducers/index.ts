@@ -2,6 +2,10 @@ import { PAGES_STATE, PAGES_ACTION } from '../types'
 import { SET_LOADING, SET_PAGE, ADD_ARTICLES } from "./actions";
 
 const initialState : PAGES_STATE = {
+  author: {
+    id: 0,
+    name: ''
+  },
   loading: false,
   page: 1,
   articles: []

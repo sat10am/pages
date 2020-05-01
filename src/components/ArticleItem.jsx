@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   content: {
-    flex: '2 0 auto'
+    flex: '2 0 auto',
+    alignItems: 'left'
   },
   cover: {
     width: 151,
@@ -36,23 +37,31 @@ export default function ArticleItem({ item }) {
 
   return (
     <Card className={classes.root}>
-      <div className={classes.details}>
-      <CardMedia
-        className={classes.cover}
-        image={item.thumbnail}
-        title={item.title}
-      />
-      </div>
-      <div className={classes.details}>
-        <CardContent className={classes.content}>
-          <Typography component="h5" variant="h5">
-            {item.title}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {item.content}
-          </Typography>
-        </CardContent>
-      </div>
+      <a href={item.url} 
+        className={classes.details}
+        target="_blank"
+      >
+        <div>
+          <CardMedia
+            className={classes.cover}
+            image={item.thumbnail}
+            title={item.title}
+          />
+        </div>
+        <div className={classes.details}>
+          <CardContent className={classes.content}>
+            <Typography component="h5" variant="h5">
+              {item.title}
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {item.description}
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {new Date(item.created_at)}
+            </Typography>
+          </CardContent>
+        </div>
+      </a>
     </Card>
   );
 }
