@@ -7,6 +7,7 @@ from alembic import context
 from sqlalchemy import pool, engine_from_config
 
 from api.constants import DATABASE_URL
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 from api.sql.models import Base  # noqa
