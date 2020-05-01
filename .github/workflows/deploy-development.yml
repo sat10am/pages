@@ -21,8 +21,7 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          echo "$PWD"
-          cd api && pip install -r requirements.txt && alembic upgrade head
+          pip install -r requirements.txt && alembic upgrade head
       - name: now deploy
         id: now-deployment
         env:
