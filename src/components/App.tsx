@@ -69,10 +69,6 @@ class App extends React.Component<AppProps, AppState> {
     ((author.name && author.name === authorName) ? Promise.resolve() : this.registerAuthor(authorName))
       .then(() => this.submitUrl(url))
       .finally(() => setLoading(false))
-
-    if (!author.name || author.name !== authorName) {
-      this.registerAuthor(authorName)
-    }
   }
 
   registerAuthor(name: string) {
@@ -96,6 +92,8 @@ class App extends React.Component<AppProps, AppState> {
     }).then(() => {
       truncateArticles()
       this.updatePage()
+    }).catch(() => {
+
     })
   }
 
